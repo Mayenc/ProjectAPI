@@ -1,0 +1,54 @@
+{
+  "name": "@stability/sdk",
+  "packageManager": "yarn@3.3.0",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rimraf lib && rimraf node_modules",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "lint:fix": "yarn lint --fix",
+    "generate:grpc-clients": "tsx scripts/GenerateGRPC.ts",
+    "generate:open-api-types": "openapi-typescript ./src/OpenAPI/OpenAPI.json --output ./src/OpenAPI/OpenAPI.generated.ts >/dev/null 2>&1",
+    "build:types": "yarn generate:grpc-clients && yarn generate:open-api-types && tsc --project tsconfig.json && tsc-alias",
+    "build:javascript": "tsx scripts/Build.ts",
+    "build": "yarn build:types && yarn build:javascript && tsx scripts/FindAndReplaceVersion.ts",
+    "build:production": "yarn build",
+    "build:staging": "yarn build",
+    "dev": "nodemon --watch src --ext ts,json --exec \"yarn build\" --ignore \"./src/**/*.generated.*\" --ignore \"./src/GRPC/Generated/**/*\""
+  },
+  "dependencies": {
+    "@protobuf-ts/grpcweb-transport": "^2.9.0"
+  },
+  "devDependencies": {
+    "@protobuf-ts/plugin": "^2.9.0",
+    "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "eslint": "8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-markdown": "^3.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.1",
+    "lint-staged": "^13.2.2",
+    "nodemon": "^2.0.22",
+    "openapi-typescript": "latest",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "ts-proto": "^1.148.2",
+    "tsc-alias": "^1.8.6",
+    "tsx": "^3.12.7",
+    "typescript": "5.0.4"
+  },
+  "lint-staged": {
+    "./src/**/*.{ts,tsx,js,jsx,md}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ]
+  }
+}

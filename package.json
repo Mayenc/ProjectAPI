@@ -1,0 +1,28 @@
+{
+  "license": "MIT",
+  "packageManager": "yarn@3.3.0",
+  "workspaces": [
+    "packages/sdk",
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "is-ci || husky install",
+    "app": "yarn workspace @stability/app",
+    "sdk": "yarn workspace @stability/sdk",
+    "dev": "yarn workspaces foreach --all --interlaced --verbose --parallel --jobs unlimited run dev",
+    "build": "yarn build:production",
+    "build:production": "yarn workspaces foreach --all --interlaced --verbose --topological --jobs unlimited run build:production",
+    "build:staging": "yarn workspaces foreach --all --interlaced --verbose --topological --jobs unlimited run build:staging",
+    "clean": "yarn workspaces foreach --all --interlaced --verbose --parallel --jobs unlimited run clean && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@types/is-ci": "^3",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
+    "rimraf": "^5.0.1"
+  },
+  "resolutions": {
+    "eslint-plugin-react-hooks@^4.6.0": "patch:eslint-plugin-react-hooks@^4.6.0#.yarn/patches/eslint-plugin-react-hooks-npm-4.6.0-b429fac07f.patch"
+  }
+}
